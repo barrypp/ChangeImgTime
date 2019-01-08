@@ -6,8 +6,8 @@ from pathlib import Path
 
 import piexif
 
-info = re.compile(' - c([0-9]+).+ - p([0-9]+)')
-p = Path('data')
+info = re.compile(r'\(v([0-9]+)\) - p([0-9]+)')
+p = Path('data3')
 count = 0
 
 for x in p.rglob('*.*'):
@@ -16,7 +16,7 @@ for x in p.rglob('*.*'):
     hour = int(i.group(1))
     num = int(i.group(2))
     #
-    t = datetime(2019,1,9) + timedelta(seconds=num,hours=hour)
+    t = datetime(2019,1,1) + timedelta(seconds=num,hours=hour)
     os.utime(x,(t.timestamp(),t.timestamp()))
     #
     if x.suffix == '.jpg':
