@@ -6,16 +6,17 @@ from pathlib import Path
 
 import piexif
 
-info = re.compile('Blame([0-9]+)-([0-9]+)')
+info = re.compile(' - c([0-9]+).+ - p([0-9]+)')
 p = Path('data')
+count = 0
 
-for x in p.iterdir():
+for x in p.rglob('*.*'):
     #
-    i = info.match(x.name)
+    i = info.search(x.name)
     hour = int(i.group(1))
     num = int(i.group(2))
     #
-    t = datetime(2019,1,8,hour) + timedelta(0,num)
+    t = datetime(2019,1,9) + timedelta(seconds=num,hours=hour)
     os.utime(x,(t.timestamp(),t.timestamp()))
     #
     if x.suffix == '.jpg':
@@ -24,4 +25,5 @@ for x in p.iterdir():
         exif_dict['Exif'][piexif.ExifIFD.DateTimeOriginal] = t.strftime('%Y:%m:%d %H:%M:%S')
         piexif.insert(piexif.dump(exif_dict), str(x))
     #
-    print(x.name)
+    count += 1
+    print(count,x.name)
